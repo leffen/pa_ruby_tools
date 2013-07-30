@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+require 'gem_release'
+require 'slop'
+require 'pa_ruby_tools'
+
+opts = Slop.parse do
+  banner 'Usage: drg [options]'
+
+  on 'n=', 'new_version=', "New version [x.x.x]"
+  on 'd', "dry_run", 'Show expected commands to run, without executing them'
+
+  on 'v', 'version', 'Display version number'
+  on 'h', 'help', 'Display this help message'
+end
+
+if opts.version?
+  puts PaRubyTools::VERSION
+  exit
+end
+
+if opts.help?
+  puts opts
+  exit
+end
+
+config_file = PaRubyTools::ConfigFile.new
+settings = config_file.load("drg.yml")
+
+drg = PaRubyTools::DoGemRelease.new(settings["host"],opts[:new_version],opts[:dry])
+drg.do_gem_release
+
+
+

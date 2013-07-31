@@ -27,7 +27,7 @@ module PaRubyTools
     def has_valid_changelog?
       CHANGE_LOG_FILES.each do |file|
         if File.exist?(file)
-          return true if File.read(file).match(/^## #{@version} \(/)
+          return true if File.read(file).match(/^## #{@version}/)
         end
       end
       false

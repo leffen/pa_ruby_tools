@@ -20,7 +20,7 @@ module PaRubyTools
     end
 
     def find_config_file(file_name)
-      fname  = check_current_dir_and_up
+      fname  = check_current_dir_and_up(file_name)
       return fname if fname
 
       ['DRG_HOME', 'HOME'].each do |env_var|
@@ -35,7 +35,7 @@ module PaRubyTools
 
     # Checks in current directory for a config file and walks the directory tree up to root for potential config files
     # copied from Chef config
-    def check_current_dir_and_up
+    def check_current_dir_and_up(file_name)
       full_path = Dir.pwd.split(File::SEPARATOR)
       (full_path.length - 1).downto(0) do |i|
         candidate_file = File.join(full_path[0..i] + [file_name])

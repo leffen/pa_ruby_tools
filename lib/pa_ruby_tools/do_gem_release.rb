@@ -44,26 +44,31 @@ module PaRubyTools
     end
 
     def do_gem_release
-      puts "Doing gem release of version: #{@version} "
+      puts "Doing gem release of version: #{@version} to host=#{@host}"
 
       puts "Checking git ...."
-      return false unless git_is_clean?
+      return message("Please ensure that all is committed to git before releasing") unless git_is_clean?
 
       puts "Checking gem credentials ...."
-      return false unless has_gem_credentials?
+      return message("To deploy a gem you must have gem credentials") unless has_gem_credentials?
 
       puts "Checking that changelog mentions the version #{@version}"
-      return false unless has_valid_changelog?
+      return message("Recommended practice for releasing gems is to have a changelog file with the latest changes") unless has_valid_changelog?
 
       puts "Executing test and deploy command "
-      "#{test_cmd} && #{bump_cmd}"
-      return false unless has_valid_changelog?
+      return message("Ups could not perform test and deploy command... Please check your test output") unless do_command("#{test_cmd} && #{bump_cmd}")
 
       # Yay we made it all the way
+      puts "Successfull release "
       true
     end
 
     private
+
+    def message(msg)
+      puts msg
+      false
+    end
 
     def check_git_status_cmd
       'test -n "$(git status --porcelain)"'

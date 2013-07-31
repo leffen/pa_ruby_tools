@@ -1,3 +1,3 @@
 module PaRubyTools
-  VERSION = "0.0.3.rc4"
+  VERSION = "0.0.3.rc5"
 end

@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = PaRubyTools::VERSION
   spec.authors       = ["leffen"]
   spec.email         = ["leffen@gmail.com"]
-  spec.description   = %q{Ruby dev helper tools for ProgramArkitekten}
+  spec.description   = %q{Some of my ruby dev helper tools }
   spec.summary       = %q{Collection of small tools and utilities for doing ruby development}
   spec.homepage      = ""
   spec.license       = "MIT"

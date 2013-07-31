@@ -46,17 +46,17 @@ module PaRubyTools
     def do_gem_release
       puts "Doing gem release of version: #{@version} to host=#{@host}"
 
-      puts "Checking git ...."
-      return message("Please ensure that all is committed to git before releasing") unless git_is_clean?
+      puts "Checking git .."
+      return abort_message("Please ensure that all is committed to git before releasing") unless git_is_clean?
 
-      puts "Checking gem credentials ...."
-      return message("To deploy a gem you must have gem credentials") unless has_gem_credentials?
+      puts "Checking gem credentials .."
+      return abort_message("To deploy a gem you must have gem credentials") unless has_gem_credentials?
 
       puts "Checking that changelog mentions the version #{@version}"
-      return message("Recommended practice for releasing gems is to have a changelog file with the latest changes") unless has_valid_changelog?
+      return abort_message("Recommended practice for releasing gems is to have a changelog file with the latest changes") unless has_valid_changelog?
 
       puts "Executing test and deploy command "
-      return message("Ups could not perform test and deploy command... Please check your test output") unless do_command("#{test_cmd} && #{bump_cmd}")
+      return abort_message("Ups could not perform test and deploy command... Please check your test output") unless do_command("#{test_cmd} && #{bump_cmd}")
 
       # Yay we made it all the way
       puts "Successfull release "
@@ -65,8 +65,8 @@ module PaRubyTools
 
     private
 
-    def message(msg)
-      puts msg
+    def abort_message(msg)
+      puts "Aborting ! #{msg}"
       false
     end
 

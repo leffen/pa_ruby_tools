@@ -12,6 +12,8 @@ module PaRubyTools
       @version = version || next_version
       @host = host
       @dry_run = dry_run
+      @user = `git config --get user.name`.rstrip
+      @email = `git config --get user.email`.rstrip
     end
 
     def git_is_clean?
@@ -55,8 +57,14 @@ module PaRubyTools
       puts "Checking that changelog mentions the version #{@version}"
       return abort_message("Recommended practice for releasing gems is to have a changelog file with the latest changes") unless has_valid_changelog?
 
-      puts "Executing test and deploy command "
-      return abort_message("Ups could not perform test and deploy command... Please check your test output") unless do_command("#{test_cmd} && #{bump_cmd}")
+      puts "Executing tests "
+      return abort_message("Ups could not perform test.. Please check your test output") unless do_command(test_cmd)
+
+      puts "Bumping version and deploying  "
+      return abort_message("Ups could not bump and deploy. Run #{bump_cmd} manually to discover problems") unless do_command(bump_cmd)
+
+      puts "Tagging release"
+      return abort_message("Unable to tag release") unless do_command(tag_command)
 
       # Yay we made it all the way
       puts "Successfull release "
@@ -80,6 +88,10 @@ module PaRubyTools
 
     def bump_cmd
       "gem bump -v #{@version} --release --tag --host #{@host}"
+    end
+
+    def tag_command
+      "git tag release-#{@version} -m 'Release made by #{@user} #{@email}'"
     end
 
     def do_command(cmd)
